@@ -1,0 +1,44 @@
+[
+  {
+    "id": "maple-stone",
+    "name": "Maple & Stone",
+    "category": "Home Services",
+    "style": "Warm & Local",
+    "pages": "Single-page",
+    "price": 12,
+    "priceTier": "budget",
+    "features": ["Responsive", "Contact form"],
+    "rating": 4.7,
+    "reviewCount": 18,
+    "gradient": "linear-gradient(135deg,#8F5F17 0%,#3F5344 100%)",
+    "description": "A warm, trust-built landing page for construction, renovation, and home service businesses."
+  },
+  {
+    "id": "ironclad",
+    "name": "Ironclad",
+    "category": "Fitness & Gym",
+    "style": "Bold & Energetic",
+    "pages": "Single-page",
+    "price": 12,
+    "priceTier": "budget",
+    "features": ["Responsive", "Contact form"],
+    "rating": 4.8,
+    "reviewCount": 24,
+    "gradient": "linear-gradient(135deg,#6B1F2A 0%,#D9A02A 100%)",
+    "description": "A bold, high-energy landing page for gyms, personal trainers, and boutique studios."
+  },
+  {
+    "id": "blackwell-voss",
+    "name": "Blackwell & Voss",
+    "category": "Professional & Legal",
+    "style": "Formal & Minimal",
+    "pages": "Multi-page",
+    "price": 29,
+    "priceTier": "premium",
+    "features": ["Responsive", "Working contact form", "Multi-page", "Payment-ready"],
+    "rating": 4.9,
+    "reviewCount": 31,
+    "gradient": "linear-gradient(135deg,#141210 0%,#B8963E 100%)",
+    "description": "A formal, black-white-and-gold 4-page site for law offices and professional service firms, with a wired EmailJS contact form."
+  }
+]

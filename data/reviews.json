@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "name": "Priya M.",
+    "productId": "blackwell-voss",
+    "rating": 5,
+    "text": "Bought this for my consulting practice and had it live in an afternoon. The contact form actually worked out of the box, which is more than I can say for the last two templates I paid for.",
+    "date": "2026-07-14"
+  },
+  {
+    "id": 2,
+    "name": "Daniel K.",
+    "productId": "ironclad",
+    "rating": 5,
+    "text": "Used this for my training studio's site. Clients keep commenting on how the class schedule table looks — didn't expect that from a template.",
+    "date": "2026-07-02"
+  },
+  {
+    "id": 3,
+    "name": "Sarah T.",
+    "productId": "maple-stone",
+    "rating": 4,
+    "text": "Clean code, easy to re-skin. Took me about 2 hours to swap in my own business details.",
+    "date": "2026-06-21"
+  },
+  {
+    "id": 4,
+    "name": "Marcus V.",
+    "productId": "blackwell-voss",
+    "rating": 5,
+    "text": "Customized this for a client's law firm — they were genuinely impressed. Worth every rupee for the multi-page structure alone.",
+    "date": "2026-06-09"
+  },
+  {
+    "id": 5,
+    "name": "Maddy",
+    "productId": "blackwell-voss",
+    "rating": 3,
+    "text": "Charter accountant website",
+    "date": "2026-08-05"
+  }
+]

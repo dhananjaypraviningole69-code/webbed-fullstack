@@ -156,7 +156,7 @@ function renderProducts() {
         <p class="desc">${p.description}</p>
         <div class="product-footer">
           <div>
-            <div class="price">$${p.price}</div>
+            <div class="price">₹${p.price}</div>
             <div class="rating">★ ${p.rating} (${p.reviewCount})</div>
           </div>
           <button class="buy-btn" data-id="${p.id}">Buy Now</button>

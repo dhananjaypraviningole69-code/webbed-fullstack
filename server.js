@@ -43,12 +43,25 @@ app.use(
     contentSecurityPolicy: {
       directives: {
         defaultSrc: ["'self'"],
-        scriptSrc: ["'self'", "https://challenges.cloudflare.com", "https://cdn.jsdelivr.net"],
+        scriptSrc: [
+  "'self'",
+  "https://challenges.cloudflare.com",
+  "https://cdn.jsdelivr.net",
+  "https://checkout.razorpay.com",
+],
         styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
         fontSrc: ["'self'", "https://fonts.gstatic.com"],
         imgSrc: ["'self'", "data:"],
-        connectSrc: ["'self'"],
-        frameSrc: ["https://challenges.cloudflare.com"],
+        connectSrc: [
+  "'self'",
+  "https://checkout.razorpay.com",
+  "https://api.razorpay.com",
+],
+        frameSrc: [
+  "https://challenges.cloudflare.com",
+  "https://api.razorpay.com",
+  "https://checkout.razorpay.com",
+],
         objectSrc: ["'none'"],
         baseUri: ["'self'"],
         upgradeInsecureRequests: [],

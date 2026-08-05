@@ -171,32 +171,118 @@ function renderProducts() {
   document.querySelectorAll(".buy-btn").forEach((btn) => {
     btn.addEventListener("click", () => handleCheckout(btn));
   });
-}
+} 
 
 async function handleCheckout(btn) {
   const productId = btn.dataset.id;
-  const msgEl = document.querySelector(`.checkout-msg[data-id="${productId}"]`);
+  const msgEl = document.querySelector(
+    `.checkout-msg[data-id="${productId}"]`
+  );
+
   btn.disabled = true;
   const originalText = btn.textContent;
-  btn.textContent = "Redirecting…";
+  btn.textContent = "Loading…";
   msgEl.textContent = "";
   msgEl.className = "checkout-msg";
 
   try {
+    // Ask our Node.js server to create a Razorpay order.
     const res = await fetch("/api/checkout", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({ productId }),
     });
+
     const data = await res.json();
 
-    if (!res.ok) throw new Error(data.error || "Checkout failed.");
+    if (!res.ok) {
+      throw new Error(data.error || "Checkout failed.");
+    }
 
-    window.location.href = data.url;
+    if (!window.Razorpay) {
+      throw new Error("Razorpay Checkout could not be loaded.");
+    }
+
+    const options = {
+      key: data.keyId,
+      amount: data.amount,
+      currency: data.currency,
+      name: "Webbed",
+      description: data.productName,
+      order_id: data.orderId,
+
+      handler: async function (response) {
+        try {
+          msgEl.textContent = "Verifying payment…";
+
+          // Send Razorpay's payment details to our server.
+          const verifyRes = await fetch("/api/checkout/verify", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(response),
+          });
+
+          const verifyData = await verifyRes.json();
+
+          if (!verifyRes.ok) {
+            throw new Error(
+              verifyData.error || "Payment verification failed."
+            );
+          }
+
+          msgEl.textContent = "Payment successful!";
+
+          // We'll connect this to product delivery later.
+          window.location.href =
+            `/?purchase=success&payment_id=${encodeURIComponent(
+              response.razorpay_payment_id
+            )}`;
+        } catch (err) {
+          console.error("Payment verification error:", err);
+          msgEl.textContent = err.message;
+          msgEl.classList.add("error");
+          btn.disabled = false;
+          btn.textContent = originalText;
+        }
+      },
+
+      modal: {
+        ondismiss: function () {
+          btn.disabled = false;
+          btn.textContent = originalText;
+          msgEl.textContent = "";
+        },
+      },
+
+      theme: {
+        color: "#111111",
+      },
+    };
+
+    const razorpay = new Razorpay(options);
+
+    razorpay.on("payment.failed", function (response) {
+      console.error("Razorpay payment failed:", response.error);
+
+      msgEl.textContent =
+        response.error.description || "Payment failed.";
+
+      msgEl.classList.add("error");
+      btn.disabled = false;
+      btn.textContent = originalText;
+    });
+
+    razorpay.open();
   } catch (err) {
     console.error("Checkout error:", err);
+
     msgEl.textContent = err.message;
     msgEl.classList.add("error");
+
     btn.disabled = false;
     btn.textContent = originalText;
   }

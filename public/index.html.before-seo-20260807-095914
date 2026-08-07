@@ -1,26 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta name="description" content="Premium website templates with real, working code — built by developers, for developers.">
-    <meta name="robots" content="index, follow">
-    <meta name="theme-color" content="#0d0919">
-    <link rel="canonical" href="__SITE_URL__/">
-
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="Webbed — Website Templates Built by Developers">
-    <meta property="og:description" content="Premium website templates with real, working code — built by developers, for developers.">
-    <meta property="og:url" content="__SITE_URL__/">
-
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": "Webbed",
-      "url": "__SITE_URL__/",
-      "description": "Premium website templates with real, working code — built by developers, for developers."
-    }
-    </script>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Webbed — Website Templates Built by Developers</title>

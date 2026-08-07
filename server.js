@@ -1,15 +1,23 @@
 /**
- * server.js — Webbed backend
- * Serves the static frontend and exposes the API routes:
- *   GET  /api/products         → the template catalog (sort/filter data)
- *   GET  /api/reviews          → all reviews
- *   POST /api/reviews          → submit a new review
- *   POST /api/contact          → send a contact-form email via nodemailer
- *   POST /api/checkout         → create a Stripe Checkout session
+ * server.js — Webbed backend (consolidated)
  *
- * Security middleware order matters — helmet and hpp run first, then
- * CORS, then body parsing (with size limits), then routes, then the
- * 404 handler, then the centralized error handler last.
+ * Public API:
+ *   GET  /api/products              → template catalog
+ *   GET  /api/reviews                → all reviews
+ *   POST /api/reviews                → submit a review
+ *   POST /api/contact                → contact form (nodemailer + Turnstile)
+ *   POST /api/checkout               → create Razorpay order
+ *   POST /api/checkout/verify        → verify payment, issue download token
+ *   GET  /api/download/:productId    → token-gated template download
+ *
+ * Admin API (all behind requireAdmin + requireCsrf + rate limiting):
+ *   POST /api/admin/login, /logout, /revoke-sessions, GET /session
+ *   PATCH/POST/DELETE /api/admin/products/*
+ *
+ * Pages:
+ *   GET  /              → public/index.html (via express.static)
+ *   GET  /template       → public/templates.html (clean URL)
+ *   GET  /admin.html      → public/admin.html (via express.static)
  */
 
 require("dotenv").config();
@@ -17,130 +25,139 @@ const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
 const hpp = require("hpp");
+const cookieParser = require("cookie-parser");
 const path = require("path");
+const fs = require("fs");
 
 const productsRouter = require("./routes/products");
 const reviewsRouter = require("./routes/reviews");
 const contactRouter = require("./routes/contact");
 const checkoutRouter = require("./routes/checkout");
+const downloadsRouter = require("./routes/downloads");
+const adminAuthRouter = require("./routes/admin-auth");
+const adminProductsRouter = require("./routes/admin-products");
+
 const { apiLimiter } = require("./middleware/rateLimiters");
 const { notFoundHandler, errorHandler } = require("./middleware/errorHandler");
+const { requireAdmin } = require("./middleware/requireAdmin");
+const { requireCsrf } = require("./middleware/csrf");
+const { adminActionLimiter } = require("./middleware/adminLimiter");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Trust the first proxy hop (Render/Railway sit behind one) so
-// express-rate-limit and req.ip see the real client IP, not the proxy's.
+// Ensure runtime directories exist on first boot
+["data/backups", "public/uploads/templates", "private-templates"].forEach((dir) => {
+  fs.mkdirSync(path.join(__dirname, dir), { recursive: true });
+});
+
 app.set("trust proxy", 1);
 
-// --- Security headers -------------------------------------------------
+// --- Security headers ----------------------------------------------------
 app.use(
   helmet({
-    // Content-Security-Policy is deliberately scoped to what this page
-    // actually loads: Google Fonts, jsdelivr (EmailJS SDK on other
-    // pages), and Cloudflare Turnstile. Tighten further if you remove
-    // any of these.
     contentSecurityPolicy: {
       directives: {
         defaultSrc: ["'self'"],
         scriptSrc: [
-  "'self'",
-  "https://challenges.cloudflare.com",
-  "https://cdn.jsdelivr.net",
-  "https://checkout.razorpay.com",
-],
+          "'self'",
+          "https://challenges.cloudflare.com",
+          "https://cdn.jsdelivr.net",
+          "https://checkout.razorpay.com",
+        ],
         styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
         fontSrc: ["'self'", "https://fonts.gstatic.com"],
         imgSrc: ["'self'", "data:"],
-        connectSrc: [
-  "'self'",
-  "https://checkout.razorpay.com",
-  "https://api.razorpay.com",
-],
-        frameSrc: [
-  "https://challenges.cloudflare.com",
-  "https://api.razorpay.com",
-  "https://checkout.razorpay.com",
-],
+        connectSrc: ["'self'", "https://checkout.razorpay.com", "https://api.razorpay.com"],
+        frameSrc: ["https://challenges.cloudflare.com", "https://api.razorpay.com", "https://checkout.razorpay.com"],
         objectSrc: ["'none'"],
         baseUri: ["'self'"],
         upgradeInsecureRequests: [],
       },
     },
-    // HSTS: force HTTPS for a year, including subdomains. Only takes
-    // effect once the site is actually served over HTTPS (true on
-    // Render/Railway by default).
-    hsts: {
-      maxAge: 31536000,
-      includeSubDomains: true,
-      preload: true,
-    },
-    // X-Frame-Options: DENY — this site should never be framed
+    hsts: { maxAge: 31536000, includeSubDomains: true, preload: true },
     frameguard: { action: "deny" },
-    // X-Content-Type-Options: nosniff — helmet enables this by default
     noSniff: true,
     referrerPolicy: { policy: "strict-origin-when-cross-origin" },
   })
 );
 
-// Permissions-Policy isn't covered by helmet's defaults — set explicitly
 app.use((req, res, next) => {
-  res.setHeader(
-    "Permissions-Policy",
-    "geolocation=(), microphone=(), camera=(), payment=(self)"
-  );
+  res.setHeader("Permissions-Policy", "geolocation=(), microphone=(), camera=(), payment=(self)");
   next();
 });
-
-// helmet() already disables X-Powered-By, but it's set explicitly here
-// too so it's obvious at a glance and survives even if helmet config
-// changes later.
 app.disable("x-powered-by");
 
-// --- CORS: whitelist, not wide open ------------------------------------
-// ALLOWED_ORIGINS is a comma-separated list in .env, e.g.
-// "https://webbed-store.onrender.com,https://webbed.dev"
+// --- Startup env validation (fail fast in production) ---------------------
+if (process.env.NODE_ENV === "production") {
+  const required = ["ADMIN_USERNAME", "ADMIN_PASSWORD_HASH", "ADMIN_JWT_SECRET"];
+  const missing = required.filter((key) => !process.env[key]);
+  if (missing.length) {
+    console.error(`Missing required env vars for production: ${missing.join(", ")}`);
+    process.exit(1);
+  }
+}
+
+// --- CORS: whitelist ------------------------------------------------------
 const allowedOrigins = (process.env.ALLOWED_ORIGINS || "")
   .split(",")
   .map((o) => o.trim())
   .filter(Boolean);
 
+if (process.env.NODE_ENV !== "production") {
+  allowedOrigins.push(
+    `http://localhost:${PORT}`,
+    `http://127.0.0.1:${PORT}`
+  );
+}
+
+if (process.env.NODE_ENV !== "production") {
+  allowedOrigins.push(
+    `http://localhost:${PORT}`,
+    `http://127.0.0.1:${PORT}`
+  );
+}
+
 app.use(
   cors({
     origin(origin, callback) {
-      // Allow same-origin/non-browser requests (no Origin header) and
-      // any origin explicitly whitelisted in .env.
-      if (!origin || allowedOrigins.includes(origin)) {
+      if (!origin || allowedOrigins.includes(origin) || !allowedOrigins.length) {
+        // Note: if ALLOWED_ORIGINS is empty (e.g. fresh local dev setup),
+        // this falls open so localhost testing isn't blocked. Set
+        // ALLOWED_ORIGINS before deploying anywhere real.
         return callback(null, true);
       }
       callback(new Error("Not allowed by CORS"));
     },
-    credentials: false, // no cookies/auth headers are used by this API
+    credentials: false,
   })
 );
 
-// --- Body parsing with size limits -------------------------------------
-// 10 KB is generous for this app's forms (name/email/message/review
-// text) and blocks oversized-payload abuse.
 app.use(express.json({ limit: "10kb" }));
 app.use(express.urlencoded({ extended: true, limit: "10kb" }));
-
-// --- HTTP Parameter Pollution protection --------------------------------
+app.use(cookieParser());
 app.use(hpp());
 
 app.use(express.static(path.join(__dirname, "public")));
 
-// --- Routes --------------------------------------------------------------
+// Clean URL for the catalog page
+app.get("/template", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "templates.html"));
+});
+
+// --- Public API ------------------------------------------------------------
 app.use("/api/products", apiLimiter, productsRouter);
 app.use("/api/reviews", apiLimiter, reviewsRouter);
 app.use("/api/contact", contactRouter); // has its own stricter limiter inside
 app.use("/api/checkout", checkoutRouter); // has its own stricter limiter inside
+app.use("/api/download", downloadsRouter); // has its own limiter inside
 
-app.get("/api/health", (req, res) => {
-  res.json({ status: "ok" });
-});
+// --- Admin API ---------------------------------------------------------------
+app.use("/api/admin", adminAuthRouter);
+app.use("/api/admin/products", requireAdmin, requireCsrf, adminActionLimiter, adminProductsRouter);
 
-// --- 404 + centralized error handling (must be last) ---------------------
+app.get("/api/health", (req, res) => res.json({ status: "ok" }));
+
 app.use("/api", notFoundHandler);
 app.use(errorHandler);
 

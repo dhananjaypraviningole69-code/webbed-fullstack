@@ -5,13 +5,30 @@
     "category": "Home Services",
     "style": "Warm & Local",
     "pages": "Single-page",
+    "pageType": "Landing page",
+    "pageCount": 1,
     "price": 500,
     "priceTier": "budget",
-    "features": ["Responsive", "Contact form"],
+    "features": [
+      "Responsive",
+      "Contact form"
+    ],
     "rating": 4.7,
     "reviewCount": 18,
     "gradient": "linear-gradient(135deg,#8F5F17 0%,#3F5344 100%)",
-    "description": "A warm, trust-built landing page for construction, renovation, and home service businesses."
+    "description": "A warm, trust-built landing page for construction, renovation, and home service businesses.",
+    "clientNeed": "A single, trustworthy landing page that converts homeowners browsing on their phone into consultation requests — without looking like every other contractor template online.",
+    "sellingPoint": "Real dimension-line stat bar and a distinct warm palette instead of the generic blue-and-white contractor look — clients notice the difference immediately.",
+    "images": [],
+    "video": null,
+    "specs": {
+      "fileSize": "~48 KB",
+      "uiType": "Static HTML / CSS / JS",
+      "budget": "Budget",
+      "bestUseFor": "Construction, renovation, home services",
+      "securityRating": "A — no backend, no attack surface",
+      "cost": 500
+    }
   },
   {
     "id": "ironclad",
@@ -19,13 +36,30 @@
     "category": "Fitness & Gym",
     "style": "Bold & Energetic",
     "pages": "Single-page",
+    "pageType": "Landing page",
+    "pageCount": 1,
     "price": 500,
     "priceTier": "budget",
-    "features": ["Responsive", "Contact form"],
+    "features": [
+      "Responsive",
+      "Contact form"
+    ],
     "rating": 4.8,
     "reviewCount": 24,
     "gradient": "linear-gradient(135deg,#6B1F2A 0%,#D9A02A 100%)",
-    "description": "A bold, high-energy landing page for gyms, personal trainers, and boutique studios."
+    "description": "A bold, high-energy landing page for gyms, personal trainers, and boutique studios.",
+    "clientNeed": "A landing page with enough energy to match the gym's brand, plus a real weekly class schedule clients can actually check before showing up.",
+    "sellingPoint": "The scoreboard-style stat strip and notched program cards give it a distinct identity — not a reskinned generic fitness template.",
+    "images": [],
+    "video": null,
+    "specs": {
+      "fileSize": "~46 KB",
+      "uiType": "Static HTML / CSS / JS",
+      "budget": "Budget",
+      "bestUseFor": "Gyms, personal trainers, boutique studios",
+      "securityRating": "A — no backend, no attack surface",
+      "cost": 500
+    }
   },
   {
     "id": "blackwell-voss",
@@ -33,12 +67,54 @@
     "category": "Professional & Legal",
     "style": "Formal & Minimal",
     "pages": "Multi-page",
+    "pageType": "Multipage",
+    "pageCount": 4,
     "price": 2000,
     "priceTier": "premium",
-    "features": ["Responsive", "Working contact form", "Multi-page", "Payment-ready"],
+    "features": [
+      "Responsive",
+      "Working contact form",
+      "Multi-page",
+      "Payment-ready"
+    ],
     "rating": 4.9,
     "reviewCount": 31,
     "gradient": "linear-gradient(135deg,#141210 0%,#B8963E 100%)",
-    "description": "A formal, black-white-and-gold 4-page site for law offices and professional service firms, with a wired EmailJS contact form."
+    "description": "A formal, black-white-and-gold 4-page site for law offices and professional service firms, with a wired EmailJS contact form.",
+    "clientNeed": "A full multi-page presence (Home, Practice Areas, About, Contact) that reads as established and trustworthy, with a contact form that actually sends email — not a dead onsubmit=\"return false\".",
+    "sellingPoint": "Four real linked pages, a working EmailJS-powered contact form, and a distinct § / docket-number visual language most legal templates don't bother with.",
+    "images": [],
+    "video": null,
+    "specs": {
+      "fileSize": "~62 KB (4 pages + shared CSS)",
+      "uiType": "Static multi-page HTML / CSS / JS",
+      "budget": "Premium",
+      "bestUseFor": "Law firms, consultants, professional services",
+      "securityRating": "A — no backend, no attack surface",
+      "cost": 2000
+    }
+  },
+  {
+    "id": "cute",
+    "name": "Maddy",
+    "category": "Red",
+    "style": "Future",
+    "pages": "Multi-page",
+    "pageType": "Multipage",
+    "pageCount": 12,
+    "price": 12000,
+    "priceTier": "premium",
+    "features": [],
+    "rating": 0,
+    "reviewCount": 0,
+    "gradient": "linear-gradient(135deg,#1E1638 0%,#6A38F1 100%)",
+    "description": "Ek jab isbt rs ek ka ek is wh ha fu ja su I&amp;amp;#x27;d",
+    "clientNeed": "",
+    "sellingPoint": "",
+    "images": [
+      "/uploads/templates/cute/180468fc16cc7365155295a4434bedeb.jpg"
+    ],
+    "video": "/uploads/templates/cute/c3faca10e62a3eb5b5e31ad0a28c052f.mp4",
+    "specs": {}
   }
 ]

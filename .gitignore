@@ -4,3 +4,11 @@ node_modules/
 *.log
 npm-debug.log*
 .DS_Store
+data/entitlements.json
+data/download-tokens.json
+data/admin-session.json
+data/admin-audit.log
+data/backups/
+public/uploads/
+private-templates/
+.env

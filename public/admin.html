@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Webbed — Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/admin.css">
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+</head>
+<body class="admin-body">
+
+<!-- Login screen -->
+<div id="login-view" class="admin-login">
+  <h1>Webbed Admin</h1>
+  <p class="sub mono">Sign in to manage templates.</p>
+  <form id="login-form">
+    <div class="field">
+      <label for="login-username">Username</label>
+      <input type="text" id="login-username" name="username" required autocomplete="username">
+    </div>
+    <div class="field">
+      <label for="login-password">Password</label>
+      <input type="password" id="login-password" name="password" required autocomplete="current-password">
+    </div>
+    <div class="field">
+      <label for="login-totp">Authenticator code</label>
+      <input type="text" id="login-totp" name="totpCode" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" placeholder="6-digit code" required autocomplete="one-time-code">
+    </div>
+    <div class="cf-turnstile" data-theme="dark" data-sitekey="YOUR_TURNSTILE_SITE_KEY" style="margin-bottom:14px;"></div>
+    <button type="submit" class="submit-btn" id="login-btn"><span id="login-btn-text">Log in</span></button>
+    <div class="form-msg" id="login-msg" role="status" aria-live="polite"></div>
+  </form>
+</div>
+
+<!-- Dashboard (hidden until authenticated) -->
+<div id="dashboard-view" class="admin-wrap" hidden>
+  <div class="admin-header">
+    <h1>Manage Templates</h1>
+    <div style="display:flex; gap:10px;">
+      <button class="logout-btn" id="revoke-btn" title="Invalidate every logged-in session, including this one">Log out everywhere</button>
+      <button class="logout-btn" id="logout-btn">Log out</button>
+    </div>
+  </div>
+
+  <details class="admin-card new-template-card">
+    <summary>+ Add new template <span class="chip">create</span></summary>
+    <div class="body">
+      <form id="create-form">
+        <div class="admin-grid">
+          <div class="field"><label>ID (lowercase, hyphens only)</label><input name="id" required pattern="[a-z0-9-]+"></div>
+          <div class="field"><label>Name</label><input name="name" required></div>
+          <div class="field"><label>Category</label><input name="category" required></div>
+          <div class="field"><label>Style</label><input name="style" required></div>
+          <div class="field">
+            <label>Page type</label>
+            <select name="pageType" required>
+              <option value="Landing page">Landing page</option>
+              <option value="Multipage">Multipage</option>
+            </select>
+          </div>
+          <div class="field"><label>Page count</label><input type="number" name="pageCount" min="1" value="1" required></div>
+          <div class="field"><label>Price (₹)</label><input type="number" name="price" min="0" step="1" required></div>
+          <div class="field">
+            <label>Price tier</label>
+            <select name="priceTier" required>
+              <option value="budget">Budget</option>
+              <option value="premium">Premium</option>
+            </select>
+          </div>
+        </div>
+        <div class="field"><label>Description</label><textarea name="description"></textarea></div>
+        <div class="admin-actions">
+          <button type="submit" class="btn-save">Create template</button>
+        </div>
+        <div class="form-msg" id="create-msg" role="status" aria-live="polite"></div>
+      </form>
+    </div>
+  </details>
+
+  <div id="templates-list"></div>
+</div>
+
+<script src="js/admin.js"></script>
+</body>
+</html>

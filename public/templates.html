@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="description" content="Premium website templates with real, working code — built by developers, for developers.">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#0d0919">
+    <link rel="canonical" href="__SITE_URL__/template">
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Webbed — Website Templates Built by Developers">
+    <meta property="og:description" content="Premium website templates with real, working code — built by developers, for developers.">
+    <meta property="og:url" content="__SITE_URL__/template">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Webbed",
+      "url": "__SITE_URL__/template",
+      "description": "Premium website templates with real, working code — built by developers, for developers."
+    }
+    </script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Templates — Webbed</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/templates.css">
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+
+<header>
+  <div class="nav wrap">
+    <a href="/" class="brand"><span class="bracket">&lt;/&gt;</span> webbed</a>
+    <nav class="navlinks">
+      <a href="/template" class="active">Templates</a>
+      <a href="index.html#reviews">Reviews</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+    <a class="nav-cta" href="index.html#contact">Get a Custom Build</a>
+  </div>
+</header>
+
+<section class="tight" style="padding-top:56px;">
+  <div class="wrap">
+    <div class="section-head" style="text-align:left; margin:0 0 40px;">
+      <div class="eyebrow"><span class="dot"></span>the catalog</div>
+      <h2>Find the right template, fast</h2>
+      <p>Filter by category, style, budget, and features. Click any template for full details.</p>
+    </div>
+
+    <div class="catalog-layout">
+      <aside class="filters">
+        <h3>Filter</h3>
+        <div class="filter-group">
+          <span class="label">Category</span>
+          <div id="filter-category"></div>
+        </div>
+        <div class="filter-group">
+          <span class="label">Style</span>
+          <div id="filter-style"></div>
+        </div>
+        <div class="filter-group">
+          <span class="label">Budget</span>
+          <label class="filter-option"><input type="radio" name="budget" value="all" checked> All prices</label>
+          <label class="filter-option"><input type="radio" name="budget" value="budget"> Budget (single-page)</label>
+          <label class="filter-option"><input type="radio" name="budget" value="premium"> Premium (multi-page)</label>
+        </div>
+        <div class="filter-group">
+          <span class="label">Must-have features</span>
+          <div id="filter-features"></div>
+        </div>
+      </aside>
+
+      <div>
+        <div class="toolbar">
+          <span class="result-count" id="result-count">Loading templates…</span>
+          <select class="sort-select" id="sort-select">
+            <option value="rating-desc">Sort: Top rated</option>
+            <option value="price-asc">Sort: Price low → high</option>
+            <option value="price-desc">Sort: Price high → low</option>
+            <option value="name-asc">Sort: Name A → Z</option>
+          </select>
+        </div>
+        <div class="products-grid" id="products-grid"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Template detail modal -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <button class="modal-close" id="modal-close" aria-label="Close">×</button>
+
+    <div class="modal-gallery">
+      <div class="modal-main-media" id="modal-main-media"></div>
+      <div class="modal-thumbs" id="modal-thumbs"></div>
+    </div>
+
+    <h2 class="modal-title" id="modal-title"></h2>
+    <div class="modal-meta-row" id="modal-meta-row"></div>
+
+    <div class="modal-section">
+      <h4>Description</h4>
+      <p id="modal-description"></p>
+    </div>
+    <div class="modal-section">
+      <h4>What you need this for</h4>
+      <p id="modal-client-need"></p>
+    </div>
+    <div class="modal-section">
+      <h4>Why it sells</h4>
+      <p id="modal-selling-point"></p>
+    </div>
+
+    <div class="modal-section">
+      <h4>Specification</h4>
+      <div class="spec-grid" id="modal-specs"></div>
+    </div>
+
+    <div class="modal-buy">
+      <div class="modal-price" id="modal-price"></div>
+      <button class="buy-btn" id="modal-buy-btn" style="padding:13px 26px; font-size:0.9rem;">Buy Now</button>
+    </div>
+    <div class="checkout-msg" id="modal-checkout-msg"></div>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-inner">
+      <div class="footer-brand mono">&lt;/&gt; webbed</div>
+    </div>
+    <p class="footer-copy mono">© 2026 Webbed. Templates &amp; custom builds for developers and small businesses.</p>
+  </div>
+</footer>
+
+<script src="js/templates.js"></script>
+</body>
+</html>

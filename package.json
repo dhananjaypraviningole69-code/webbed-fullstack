@@ -1,7 +1,7 @@
 {
-  "name": "webbed-fullstack",
+  "name": "webbed",
   "version": "1.0.0",
-  "description": "Webbed — a storefront for selling website templates, with a working contact form, live reviews, and Stripe checkout.",
+  "description": "Webbed — website template storefront with admin CMS, Razorpay checkout, and token-gated downloads.",
   "main": "server.js",
   "engines": {
     "node": ">=18.0.0"
@@ -9,9 +9,12 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "audit": "npm audit --omit=dev"
+    "setup": "node scripts/setup-env.js && npm install",
+    "start:all": "npm run setup && npm start"
   },
   "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
@@ -19,9 +22,11 @@
     "express-validator": "^7.1.0",
     "helmet": "^7.1.0",
     "hpp": "^0.2.3",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.9.13",
-    "razorpay": "^2.9.8",
-    "stripe": "^15.7.0"
+    "otplib": "^12.0.1",
+    "razorpay": "^2.9.4"
   },
   "devDependencies": {
     "nodemon": "^3.1.0"

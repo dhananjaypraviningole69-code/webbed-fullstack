@@ -1,0 +1,72 @@
+/* Admin dashboard — reuses the Webbed color variables from style.css.
+   Load order in admin.html: style.css, then this file. */
+
+.admin-body{ min-height:100vh; padding:40px 24px 80px; }
+.admin-wrap{ max-width:960px; margin:0 auto; }
+
+.admin-login{
+  max-width:380px; margin:120px auto; background:var(--layer);
+  border:1px solid var(--line); border-radius:14px; padding:34px 30px;
+}
+.admin-login h1{ font-size:1.4rem; margin-bottom:6px; }
+.admin-login .sub{ font-size:0.85rem; color:rgba(233,213,255,0.6); margin-bottom:24px; }
+
+.admin-header{ display:flex; justify-content:space-between; align-items:center; margin-bottom:32px; }
+.admin-header h1{ font-size:1.6rem; }
+.logout-btn{
+  font-family:'JetBrains Mono', monospace; font-size:0.82rem; padding:9px 16px;
+  border-radius:999px; border:1px solid var(--line); color:var(--lavender); cursor:pointer; background:none;
+}
+.logout-btn:hover{ border-color:var(--glow); color:var(--glow); }
+
+.admin-card{
+  background:var(--layer); border:1px solid var(--line); border-radius:14px;
+  padding:22px 24px; margin-bottom:20px;
+}
+.admin-card summary{
+  cursor:pointer; font-family:'Space Grotesk', sans-serif; font-weight:600;
+  color:var(--white); font-size:1.05rem; list-style:none; display:flex;
+  justify-content:space-between; align-items:center;
+}
+.admin-card summary::-webkit-details-marker{ display:none; }
+.admin-card summary .chip{
+  font-family:'JetBrains Mono', monospace; font-size:0.72rem; padding:3px 10px;
+  border-radius:999px; border:1px solid var(--line); color:rgba(233,213,255,0.6);
+}
+.admin-card .body{ margin-top:20px; }
+
+.admin-grid{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+@media (max-width:640px){ .admin-grid{ grid-template-columns:1fr; } }
+
+.admin-actions{ display:flex; gap:10px; margin-top:16px; flex-wrap:wrap; }
+.btn-save{
+  font-family:'JetBrains Mono', monospace; font-size:0.85rem; font-weight:600;
+  padding:11px 20px; border-radius:8px; background:var(--accent); color:#fff; border:none; cursor:pointer;
+}
+.btn-save:hover{ box-shadow:0 0 18px rgba(168,85,247,0.5); }
+.btn-danger{
+  font-family:'JetBrains Mono', monospace; font-size:0.85rem; font-weight:600;
+  padding:11px 20px; border-radius:8px; background:transparent; color:#f87171;
+  border:1px solid rgba(248,113,113,0.4); cursor:pointer;
+}
+.btn-danger:hover{ background:rgba(248,113,113,0.1); }
+
+.media-row{ display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
+.media-thumb{
+  width:80px; height:80px; border-radius:8px; overflow:hidden; position:relative;
+  border:1px solid var(--line); background-size:cover; background-position:center;
+}
+.media-thumb button{
+  position:absolute; top:2px; right:2px; width:20px; height:20px; border-radius:50%;
+  background:rgba(10,7,19,0.85); color:#f87171; border:none; cursor:pointer; font-size:0.75rem; line-height:1;
+}
+.media-count{ font-size:0.78rem; color:rgba(233,213,255,0.5); margin-top:6px; }
+.upload-label{
+  display:inline-block; font-family:'JetBrains Mono', monospace; font-size:0.8rem;
+  padding:9px 16px; border:1px dashed var(--line); border-radius:8px; cursor:pointer; margin-top:10px;
+  color:var(--lavender);
+}
+.upload-label:hover{ border-color:var(--glow); color:var(--glow); }
+.upload-label input{ display:none; }
+
+.new-template-card{ border:1px dashed var(--line-strong); }

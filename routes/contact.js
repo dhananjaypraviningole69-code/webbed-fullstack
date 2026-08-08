@@ -1,5 +1,4 @@
 const express = require("express");
-const nodemailer = require("nodemailer");
 const { body, validationResult } = require("express-validator");
 
 const { contactLimiter } = require("../middleware/rateLimiters");
@@ -58,28 +57,31 @@ router.post("/", contactLimiter, contactValidators, async (req, res, next) => {
   const safeMessage = stripHeaderInjectionChars(message);
 
   try {
-    console.log("[SMTP DEBUG] user set:", !!process.env.CONTACT_EMAIL_USER);
-    console.log("[SMTP DEBUG] pass set:", !!process.env.CONTACT_EMAIL_PASS);
-    console.log("[SMTP DEBUG] recipient set:", !!process.env.CONTACT_EMAIL_TO);
+    const emailResponse = await fetch(
+      "https://api.emailjs.com/api/v1.0/email/send",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          service_id: "service_iakzj1j",
+          template_id: "template_w4iqzer",
+          user_id: "d_n4haxpIGsdaIg9Y",
+          template_params: {
+            name: safeName,
+            email: safeEmail,
+            message: safeMessage,
+          },
+        }),
+      }
+    );
 
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.CONTACT_EMAIL_USER,
-        pass: process.env.CONTACT_EMAIL_PASS,
-      },
-      connectionTimeout: 10000,
-      greetingTimeout: 10000,
-      socketTimeout: 10000,
-    });
-
-    await transporter.sendMail({
-      from: `"Webbed Contact Form" <${process.env.CONTACT_EMAIL_USER}>`,
-      to: process.env.CONTACT_EMAIL_TO || process.env.CONTACT_EMAIL_USER,
-      replyTo: safeEmail,
-      subject: `New inquiry from ${safeName} via Webbed`,
-      text: `From: ${safeName} <${safeEmail}>\n\n${safeMessage}`,
-    });
+    if (!emailResponse.ok) {
+      const emailError = await emailResponse.text();
+      console.error("EmailJS delivery failed:", emailError);
+      throw new Error("Email delivery failed.");
+    }
 
     res.json({ success: true });
   } catch (error) {

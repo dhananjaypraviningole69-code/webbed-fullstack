@@ -58,12 +58,19 @@ router.post("/", contactLimiter, contactValidators, async (req, res, next) => {
   const safeMessage = stripHeaderInjectionChars(message);
 
   try {
+    console.log("[SMTP DEBUG] user set:", !!process.env.CONTACT_EMAIL_USER);
+    console.log("[SMTP DEBUG] pass set:", !!process.env.CONTACT_EMAIL_PASS);
+    console.log("[SMTP DEBUG] recipient set:", !!process.env.CONTACT_EMAIL_TO);
+
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
         user: process.env.CONTACT_EMAIL_USER,
         pass: process.env.CONTACT_EMAIL_PASS,
       },
+      connectionTimeout: 10000,
+      greetingTimeout: 10000,
+      socketTimeout: 10000,
     });
 
     await transporter.sendMail({

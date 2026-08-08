@@ -57,29 +57,26 @@ router.post("/", contactLimiter, contactValidators, async (req, res, next) => {
   const safeMessage = stripHeaderInjectionChars(message);
 
   try {
-    const emailResponse = await fetch(
-      "https://api.emailjs.com/api/v1.0/email/send",
+    const formspreeResponse = await fetch(
+      "https://formspree.io/f/xvkpzkjq",
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Accept": "application/json",
         },
         body: JSON.stringify({
-          service_id: "service_iakzj1j",
-          template_id: "template_w4iqzer",
-          user_id: "d_n4haxpIGsdaIg9Y",
-          template_params: {
-            name: safeName,
-            email: safeEmail,
-            message: safeMessage,
-          },
+          name: safeName,
+          email: safeEmail,
+          message: safeMessage,
+          _replyto: safeEmail,
         }),
       }
     );
 
-    if (!emailResponse.ok) {
-      const emailError = await emailResponse.text();
-      console.error("EmailJS delivery failed:", emailError);
+    if (!formspreeResponse.ok) {
+      const formspreeError = await formspreeResponse.text();
+      console.error("Formspree delivery failed:", formspreeError);
       throw new Error("Email delivery failed.");
     }
 
